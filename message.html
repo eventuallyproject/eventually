@@ -1,54 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Write Your Future Message</title>
   <meta charset="UTF-8">
+  <title>Send a Message</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
-  <h1>Write a Future Message</h1>
 
-  <form action="success.html">
-    <label>Your email:</label><br>
-    <input type="email" required><br><br>
+  <form id="message-form">
+    <label>Your email</label>
+    <input id="email" type="email" required>
 
-    <label>Your message to your future self:</label><br>
-    <textarea required></textarea><br><br>
+    <label>Your message</label>
+    <textarea id="message" required></textarea>
 
-    <label>Delivery date:</label><br>
-    <input type="date" required><br><br>
+    <label>Delivery date</label>
+    <input id="deliveryDate" type="date" required>
 
-    <button type="submit">Send to the Future</button>
+    <button type="submit">Send</button>
   </form>
+
   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  const firebaseConfig = {
-    // paste your Firebase config here
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-JZPYvS-WxJUgqQ48COJJ8PbgNz2ZrA0",
+      authDomain: "eventually-project.firebaseapp.com",
+      projectId: "eventually-project",
+      storageBucket: "eventually-project.firebasestorage.app",
+      messagingSenderId: "785146559839",
+      appId: "1:785146559839:web:9ad8bd3a578db81e9f4aea"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  const form = document.querySelector("form");
+    const form = document.getElementById("message-form");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-    const email = form.querySelector("input[type='email']").value;
-    const message = form.querySelector("textarea").value;
-    const date = form.querySelector("input[type='date']").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
+      const date = document.getElementById("deliveryDate").value;
 
-    await addDoc(collection(db, "messages"), {
-      email: email,
-      message: message,
-      deliveryDate: date,
-      createdAt: new Date()
+      await addDoc(collection(db, "messages"), {
+        email: email,
+        message: message,
+        deliveryDate: date,
+        createdAt: new Date()
+      });
+
+      window.location.href = "success.html";
     });
+  </script>
 
-    window.location.href = "success.html";
-  });
-</script>
-  
 </body>
 </html>
