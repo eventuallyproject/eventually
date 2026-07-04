@@ -15,6 +15,9 @@
     <label>Your message</label>
     <textarea id="message" required></textarea>
 
+    <label>Upload a file (image or video)</label>
+    <input id="file" type="file" accept="image/*,video/*">
+
     <label>Delivery date</label>
     <input id="deliveryDate" type="date" required>
 
@@ -24,6 +27,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD-JZPYvS-WxJUgqQ48COJJ8PbgNz2ZrA0",
@@ -45,11 +49,23 @@
       const email = document.getElementById("email").value;
       const message = document.getElementById("message").value;
       const date = document.getElementById("deliveryDate").value;
+      const fileInput = document.getElementById("file");
+      let fileURL = null;
+      
+      if (fileInput.files.length > 0) {
+  const file = fileInput.files[0];
+  const storage = getStorage();
+  const storageRef = ref(storage, "uploads/" + file.name);
+
+  await uploadBytes(storageRef, file);
+  fileURL = await getDownloadURL(storageRef);
+}
 
       await addDoc(collection(db, "messages"), {
         email: email,
         message: message,
         deliveryDate: date,
+        fileURL: fileURL,
         createdAt: new Date()
       });
 
