@@ -19,5 +19,36 @@
 
     <button type="submit">Send to the Future</button>
   </form>
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    // paste your Firebase config here
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.querySelector("form");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = form.querySelector("input[type='email']").value;
+    const message = form.querySelector("textarea").value;
+    const date = form.querySelector("input[type='date']").value;
+
+    await addDoc(collection(db, "messages"), {
+      email: email,
+      message: message,
+      deliveryDate: date,
+      createdAt: new Date()
+    });
+
+    window.location.href = "success.html";
+  });
+</script>
+  
 </body>
 </html>
